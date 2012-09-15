@@ -3,7 +3,7 @@ package ui
 import "math"
 
 func Noise(x, y, z float64) float64 {
-	x, y, z = x*math.Pi+math.E, y*math.Sqrt2+math.Phi, z*math.SqrtE+math.Ln2
+	x, y, z = x+math.E, y+math.Pi, z+math.Phi
 
 	X, Y, Z := int(math.Floor(x))&255, int(math.Floor(y))&255, int(math.Floor(z))&255
 	x -= float64(int(math.Floor(x)))
