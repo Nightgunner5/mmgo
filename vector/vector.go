@@ -78,6 +78,30 @@ func (v Vector) Dot(other Vector) float64 {
 	return dot
 }
 
+func (v Vector) MagnitudeSquared() float64 {
+	var magnitude float64
+
+	for _, value := range v {
+		magnitude += value * value
+	}
+
+	return magnitude
+}
+
+func (v Vector) Magnitude() float64 {
+	return math.Sqrt(v.MagnitudeSquared())
+}
+
+func (v Vector) Normalize() Vector {
+	magnitude := v.Magnitude()
+
+	for i := range v {
+		v[i] /= magnitude
+	}
+
+	return v
+}
+
 func (v Vector) String() string {
 	if len(v) == 0 {
 		return "<Empty>"

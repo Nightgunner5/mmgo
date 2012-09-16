@@ -1,43 +1,41 @@
 package ui
 
-import "github.com/banthar/gl"
+import (
+	"github.com/Nightgunner5/mmgo/terrain"
+	"github.com/banthar/gl"
+)
 
 func drawTerrain() {
-	x, y := 0, 0 // player.Position()
-	x >>= 4
-	y >>= 4
+	var x, y int64 = 0, 0 // player.Position()
+	x >>= terrain.ChunkShift
+	y >>= terrain.ChunkShift
 
-	for i := x - 5; i < x+5; i++ {
-		for j := y - 1; j < y+2; j++ {
+	for i := x - 2; i <= x+1; i++ {
+		for j := y - 1; j <= y+1; j++ {
 			drawChunk(i, j)
 		}
 	}
 }
 
-func drawChunk(chunkX, chunkY int) {
-	color, vertex := func(x, y int) {
-		a := float32(Noise(float64(x)/10, float64(y)/10, 0))/4 + 0.5
-		gl.Color3f(a, a, a)
-	}, func(x, y int) {
-		gl.Vertex3f(float32(x), float32(y), float32(Noise(float64(x)/10, float64(y)/10, 0)))
-	}
+func drawChunk(chunkX, chunkY int64) {
+	chunk := terrain.GetChunkAt(chunkX, chunkY)
 
-	for x := chunkX << 4; x < (chunkX+1)<<4; x++ {
-		for y := chunkY << 4; y < (chunkY+1)<<4; y++ {
-			color(x, y)
-			vertex(x, y)
+	for x := 0; x < terrain.ChunkSizeSubdivisions; x++ {
+		for y := 0; y < terrain.ChunkSizeSubdivisions; y++ {
+			gl.Normal3d(chunk.Normals.Get(x, y))
+			gl.Vertex3d(chunk.Vertices.Get(x, y))
 			x++
 
-			color(x, y)
-			vertex(x, y)
+			gl.Normal3d(chunk.Normals.Get(x, y))
+			gl.Vertex3d(chunk.Vertices.Get(x, y))
 			y++
 
-			color(x, y)
-			vertex(x, y)
+			gl.Normal3d(chunk.Normals.Get(x, y))
+			gl.Vertex3d(chunk.Vertices.Get(x, y))
 			x--
 
-			color(x, y)
-			vertex(x, y)
+			gl.Normal3d(chunk.Normals.Get(x, y))
+			gl.Vertex3d(chunk.Vertices.Get(x, y))
 			y--
 		}
 	}
