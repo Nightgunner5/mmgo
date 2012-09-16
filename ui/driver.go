@@ -23,7 +23,7 @@ func Drive() {
 }
 
 func display() {
-	gl.Clear(gl.COLOR_BUFFER_BIT)
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
 	positionCamera()
 
@@ -47,18 +47,21 @@ func reshape(width, height int) {
 	gl.LoadIdentity()
 
 	glu.Perspective(45, aspect, NEAR_Z, FAR_Z)
+
+	gl.Enable(gl.DEPTH_TEST)
+
+	gl.Enable(gl.LIGHTING)
+	gl.Lightfv(gl.LIGHT0, gl.POSITION, []float32{-2, -3, 5, 0})
+	gl.Lightfv(gl.LIGHT0, gl.AMBIENT, []float32{0.1, 0.1, 0.2, 1})
+	gl.Lightfv(gl.LIGHT0, gl.DIFFUSE, []float32{0.4, 0.35, 0.2, 1})
+	gl.Lightfv(gl.LIGHT0, gl.SPECULAR, []float32{1, 1, 1, 1})
+	gl.Enable(gl.LIGHT0)
+
 	gl.Rotatef(-30, 1, 0, 0)
 	gl.Translatef(0, 0, -5)
 
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.LoadIdentity()
-
-	gl.Enable(gl.LIGHTING)
-	gl.Lightfv(gl.LIGHT0, gl.POSITION, []float32{2, 3, 1, 0})
-	gl.Lightfv(gl.LIGHT0, gl.AMBIENT, []float32{0.1, 0.1, 0.2, 1})
-	gl.Lightfv(gl.LIGHT0, gl.DIFFUSE, []float32{1, 0.9, 0.6, 1})
-	gl.Lightfv(gl.LIGHT0, gl.SPECULAR, []float32{1, 1, 1, 1})
-	gl.Enable(gl.LIGHT0)
 
 	gl.Lightfv(gl.LIGHT1, gl.AMBIENT, []float32{0, 0, 0, 1})
 	gl.Lightfv(gl.LIGHT1, gl.DIFFUSE, []float32{0.4, 0.4, 0.4, 1})

@@ -4,7 +4,7 @@ import "github.com/Nightgunner5/mmgo/vector"
 
 const (
 	scaleHorizontal = 0.4
-	scaleVertical   = 1.2
+	scaleVertical   = 1.5
 
 	noiseIterations = 3
 	noiseAmplitude  = 0.15
@@ -35,7 +35,7 @@ func generateChunk(chunkCoord ChunkCoordinate) *Chunk {
 	}
 
 	// Optimization: Pre-generate the noise values we'll be using instead of generating them repeatedly
-	var heights [ChunkSizeSubdivisions + 2][ChunkSizeSubdivisions + 2]float64
+	var heights [ChunkSizeSubdivisions + Subdivisions + 1][ChunkSizeSubdivisions + Subdivisions + 1]float64
 	for i := range heights {
 		for j := range heights[i] {
 			heights[i][j] = terrainHeightExpensive(coord(i, j))
@@ -49,8 +49,8 @@ func generateChunk(chunkCoord ChunkCoordinate) *Chunk {
 			x, y := coord(i, j)
 
 			// Normal
-			current, right, top := heights[i][j], heights[i+1][j], heights[i][j+1]
-			v := vector.Vec3(right-current, top-current, scaleVertical)
+			current, right, top := heights[i][j], heights[i+Subdivisions][j], heights[i][j+Subdivisions]
+			v := vector.Vec3(current-right, current-top, scaleVertical / 2)
 			v.Normalize()
 			chunk.Normals.Set(i, j, v[0], v[1], v[2])
 

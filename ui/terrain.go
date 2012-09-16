@@ -18,6 +18,13 @@ func drawTerrain() {
 	}
 }
 
+func normalToColor(x, y, z float64) (r, g, b float64) {
+	r = x/2 + 0.5
+	g = y/2 + 0.5
+	b = z/2 + 0.5
+	return
+}
+
 func drawChunk(chunkX, chunkY int64) {
 	chunk := terrain.GetChunkAt(chunkX, chunkY)
 
@@ -28,18 +35,22 @@ func drawChunk(chunkX, chunkY int64) {
 		for x := 0; x < terrain.ChunkSizeSubdivisions; x++ {
 			for y := 0; y < terrain.ChunkSizeSubdivisions; y++ {
 				gl.Normal3d(chunk.Normals.Get(x, y))
+				gl.Color3d(normalToColor(chunk.Normals.Get(x, y)))
 				gl.Vertex3d(chunk.Vertices.Get(x, y))
 				x++
 
 				gl.Normal3d(chunk.Normals.Get(x, y))
+				gl.Color3d(normalToColor(chunk.Normals.Get(x, y)))
 				gl.Vertex3d(chunk.Vertices.Get(x, y))
 				y++
 
 				gl.Normal3d(chunk.Normals.Get(x, y))
+				gl.Color3d(normalToColor(chunk.Normals.Get(x, y)))
 				gl.Vertex3d(chunk.Vertices.Get(x, y))
 				x--
 
 				gl.Normal3d(chunk.Normals.Get(x, y))
+				gl.Color3d(normalToColor(chunk.Normals.Get(x, y)))
 				gl.Vertex3d(chunk.Vertices.Get(x, y))
 				y--
 			}
