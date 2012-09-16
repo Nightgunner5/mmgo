@@ -2,6 +2,7 @@ package ui
 
 import (
 	"github.com/Nightgunner5/glut"
+	"github.com/Nightgunner5/mmgo/terrain"
 	"github.com/banthar/gl"
 	"github.com/banthar/glu"
 )
@@ -43,12 +44,14 @@ func reshape(width, height int) {
 	}
 
 	gl.Viewport(shift, 0, width, height)
+
+	gl.Enable(gl.DEPTH_TEST)
+	gl.Enable(gl.COLOR_MATERIAL)
+
 	gl.MatrixMode(gl.PROJECTION)
 	gl.LoadIdentity()
 
 	glu.Perspective(45, aspect, NEAR_Z, FAR_Z)
-
-	gl.Enable(gl.DEPTH_TEST)
 
 	gl.Enable(gl.LIGHTING)
 	gl.Lightfv(gl.LIGHT0, gl.POSITION, []float32{-2, -3, 5, 0})
@@ -77,6 +80,7 @@ func idle() {
 	previousTime = time
 
 	player.x += float64(delta) / 1000
+	player.z = terrain.GetHeightAt(player.x, player.y)
 	_ = delta
 
 	window.PostRedisplay()

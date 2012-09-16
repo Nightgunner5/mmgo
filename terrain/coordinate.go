@@ -30,6 +30,6 @@ func GetChunk(coord ChunkCoordinate) *Chunk {
 	return chunks[coord]
 }
 
-func GetChunkAt(x, y int64) *Chunk {
-	return GetChunk(ChunkCoordinate{x, y})
+func GetChunkAt(chunkX, chunkY int64) *Chunk {
+	return GetChunk(ChunkCoordinate{chunkX, chunkY})
 }
