@@ -9,7 +9,7 @@ const (
 	ChunkSizeSubdivisions = ChunkSize * Subdivisions
 )
 
-type Vec3Array [(ChunkSizeSubdivisions+1) * (ChunkSizeSubdivisions+1) * 3]float64
+type Vec3Array [(ChunkSizeSubdivisions + 1) * (ChunkSizeSubdivisions + 1) * 3]float64
 
 func (v *Vec3Array) Set(x, y int, a, b, c float64) {
 	pos := (x*(ChunkSizeSubdivisions+1) + y) * 3
@@ -24,4 +24,9 @@ func (v *Vec3Array) Get(x, y int) (a, b, c float64) {
 type Chunk struct {
 	Normals  Vec3Array
 	Vertices Vec3Array
+
+	// time.Time.Unix()
+	lastGet int64
+
+	DisplayList uint
 }

@@ -13,6 +13,7 @@ func GetChunk(coord ChunkCoordinate) *Chunk {
 	chunkLock.RLock()
 	if chunk, exists := chunks[coord]; exists {
 		chunkLock.RUnlock()
+		chunk.markGet()
 		return chunk
 	}
 	chunkLock.RUnlock()
@@ -21,6 +22,7 @@ func GetChunk(coord ChunkCoordinate) *Chunk {
 	defer chunkLock.Unlock()
 	// Avoid race condition
 	if chunk, exists := chunks[coord]; exists {
+		chunk.markGet()
 		return chunk
 	}
 

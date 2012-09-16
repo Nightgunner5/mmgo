@@ -7,8 +7,8 @@ const (
 	scaleVertical   = 1.2
 
 	noiseIterations = 3
-	noiseAmplitude = 0.15
-	noiseFrequency = 3
+	noiseAmplitude  = 0.15
+	noiseFrequency  = 3
 )
 
 func terrainHeightExpensive(x, y float64) float64 {
@@ -20,7 +20,7 @@ func terrainHeightExpensive(x, y float64) float64 {
 		value += n * mul
 		max += mul
 
-		x, y = x * noiseFrequency, y * noiseFrequency
+		x, y = x*noiseFrequency, y*noiseFrequency
 		mul *= noiseAmplitude
 	}
 
@@ -44,8 +44,8 @@ func generateChunk(chunkCoord ChunkCoordinate) *Chunk {
 
 	chunk := new(Chunk)
 
-	for i := 0; i < ChunkSizeSubdivisions + 1; i++ {
-		for j := 0; j < ChunkSizeSubdivisions + 1; j++ {
+	for i := 0; i < ChunkSizeSubdivisions+1; i++ {
+		for j := 0; j < ChunkSizeSubdivisions+1; j++ {
 			x, y := coord(i, j)
 
 			// Normal
@@ -58,6 +58,8 @@ func generateChunk(chunkCoord ChunkCoordinate) *Chunk {
 			chunk.Vertices.Set(i, j, x, y, current)
 		}
 	}
+
+	chunk.markGet()
 
 	return chunk
 }

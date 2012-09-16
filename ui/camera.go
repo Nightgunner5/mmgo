@@ -4,8 +4,8 @@ import "github.com/banthar/gl"
 
 func positionCamera() {
 	gl.LoadIdentity()
-	x, y := 0, 0 //player.Position()
-	gl.Translatef(float32(-x), float32(-y), 0)
-	gl.Rotatef(-30, 1, 0, 0)
-	gl.Translatef(0, 0, -5)
+	x, y, z := player.Position()
+	gl.Translated(-x, -y + 4, -z)
+
+	gl.Lightfv(gl.LIGHT1, gl.POSITION, []float32{float32(x), float32(y), float32(z) + 1, 1})
 }
