@@ -20,6 +20,8 @@ func Drive() {
 	glut.ReshapeFunc(reshape)
 	glut.DisplayFunc(display)
 	glut.IdleFunc(idle)
+	glut.KeyboardFunc(keydown)
+	glut.KeyboardUpFunc(keyup)
 	glut.MainLoop()
 }
 
@@ -76,20 +78,113 @@ var previousTime int
 
 func idle() {
 	time := glut.Get(glut.ELAPSED_TIME)
-	delta := time - previousTime
+	delta := float64(time-previousTime) / 1000
 	previousTime = time
 
-	player.x += float64(delta) / 1000
-	player.z = terrain.GetHeightAt(player.x, player.y)
-	_ = delta
+	player.Think(delta)
 
 	window.PostRedisplay()
 }
 
-type player_t struct{ x, y, z float64 }
+// Not synchronized because it is only used in the main loop.
+var keys = make(map[byte]bool)
+
+func keydown(key byte, x, y int) {
+	keys[key] = true
+}
+
+func keyup(key byte, x, y int) {
+	delete(keys, key)
+
+	switch key {
+	case 'n':
+		terrain.ChangeTerrainQuality(-1)
+	case 'm':
+		terrain.ChangeTerrainQuality(+1)
+	}
+}
+
+func key(key byte) bool {
+	a, b := keys[key]
+	return b && a
+}
+
+// TODO: put this in a separate package
+type player_t struct {
+	// Acceleration
+	aX, aY, aZ float64
+
+	// Velocity
+	vX, vY, vZ float64
+
+	// Position
+	x, y, z float64
+}
 
 var player player_t
 
 func (p *player_t) Position() (x, y, z float64) {
 	return p.x, p.y, p.z
+}
+
+func (p *player_t) Think(delta float64) {
+	p.aX = 0
+	if key('d') {
+		p.aX += 1
+	}
+	if key('a') {
+		p.aX -= 1
+	}
+
+	if p.vX < 0 {
+		p.aX += 0.5
+	}
+	if p.vX > 0 {
+		p.aX -= 0.5
+	}
+
+	p.aY = 0
+	if key('w') {
+		p.aY += 1
+	}
+	if key('s') {
+		p.aY -= 1
+	}
+
+	if p.vY < 0 {
+		p.aY += 0.5
+	}
+	if p.vY > 0 {
+		p.aY -= 0.5
+	}
+
+	p.aZ = -9.8
+
+	p.vX += p.aX * delta
+	p.vY += p.aY * delta
+	p.vZ += p.aZ * delta
+
+	if p.vX > 5 {
+		p.vX = 5
+	}
+	if p.vX < -5 {
+		p.vX = -5
+	}
+
+	if p.vY > 5 {
+		p.vY = 5
+	}
+	if p.vY < -5 {
+		p.vY = -5
+	}
+
+	p.x += p.vX * delta
+	p.y += p.vY * delta
+	p.z += p.vZ * delta
+
+	terrainHeight := terrain.GetHeightAt(p.x, p.y)
+	if p.z < terrainHeight {
+		p.z = terrainHeight
+		p.vZ = 0
+	}
 }

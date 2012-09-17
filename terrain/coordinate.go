@@ -1,6 +1,9 @@
 package terrain
 
-import "sync"
+import (
+	"github.com/Nightgunner5/mmgo/config"
+	"sync"
+)
 
 type ChunkCoordinate struct {
 	X, Y int64
@@ -8,6 +11,13 @@ type ChunkCoordinate struct {
 
 var chunks = make(map[ChunkCoordinate]*Chunk)
 var chunkLock sync.RWMutex
+
+func ChangeTerrainQuality(amount int) {
+	chunkLock.Lock()
+	defer chunkLock.Unlock()
+	chunks = make(map[ChunkCoordinate]*Chunk)
+	config.ChangeTerrainQuality(amount)
+}
 
 func GetChunk(coord ChunkCoordinate) *Chunk {
 	chunkLock.RLock()

@@ -26,8 +26,8 @@ func drawChunk(chunkX, chunkY int64) {
 		chunk.DisplayList = gl.GenLists(1)
 
 		gl.NewList(chunk.DisplayList, gl.COMPILE)
-		for x := 0; x < config.ChunkArraySize() - 1; x++ {
-			for y := 0; y < config.ChunkArraySize() - 1; y++ {
+		for x := 0; x < config.ChunkArraySize()-1; x++ {
+			for y := 0; y < config.ChunkArraySize()-1; y++ {
 				gl.Normal3d(chunk.Normals.Get(x, y))
 				gl.Vertex3d(chunk.Vertices.Get(x, y))
 				x++
