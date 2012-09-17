@@ -1,23 +1,16 @@
 package terrain
 
-const (
-	Subdivisions    = 4
-	SubdivisionSize = 1.0 / Subdivisions
+import "github.com/Nightgunner5/mmgo/config"
 
-	ChunkShift            = 4
-	ChunkSize             = 1 << ChunkShift
-	ChunkSizeSubdivisions = ChunkSize * Subdivisions
-)
+type Vec3Array []float64
 
-type Vec3Array [(ChunkSizeSubdivisions + 1) * (ChunkSizeSubdivisions + 1) * 3]float64
-
-func (v *Vec3Array) Set(x, y int, a, b, c float64) {
-	pos := (x*(ChunkSizeSubdivisions+1) + y) * 3
+func (v Vec3Array) Set(x, y int, a, b, c float64) {
+	pos := (x*config.ChunkArraySize() + y) * 3
 	v[pos], v[pos+1], v[pos+2] = a, b, c
 }
 
-func (v *Vec3Array) Get(x, y int) (a, b, c float64) {
-	pos := (x*(ChunkSizeSubdivisions+1) + y) * 3
+func (v Vec3Array) Get(x, y int) (a, b, c float64) {
+	pos := (x*config.ChunkArraySize() + y) * 3
 	return v[pos], v[pos+1], v[pos+2]
 }
 

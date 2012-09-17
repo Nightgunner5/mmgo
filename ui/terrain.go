@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/Nightgunner5/mmgo/config"
 	"github.com/Nightgunner5/mmgo/terrain"
 	"github.com/banthar/gl"
 )
@@ -8,21 +9,14 @@ import (
 func drawTerrain() {
 	playerX, playerY, _ := player.Position()
 	x, y := int64(playerX), int64(playerY)
-	x >>= terrain.ChunkShift - 1
-	y >>= terrain.ChunkShift - 1
+	x >>= config.ChunkShift - 1
+	y >>= config.ChunkShift - 1
 
 	for i := (x - 1) >> 1; i <= (x+1)>>1; i++ {
 		for j := (y - 1) >> 1; j <= (y+1)>>1; j++ {
 			drawChunk(i, j)
 		}
 	}
-}
-
-func tileColor(x, y, z float64) (r, g, b float64) {
-	r = float64(int64(x)&3) / 4
-	g = float64(int64(y)&3) / 4
-	b = z/2 + 0.5
-	return
 }
 
 func drawChunk(chunkX, chunkY int64) {
@@ -32,10 +26,8 @@ func drawChunk(chunkX, chunkY int64) {
 		chunk.DisplayList = gl.GenLists(1)
 
 		gl.NewList(chunk.DisplayList, gl.COMPILE)
-		for x := 0; x < terrain.ChunkSizeSubdivisions; x++ {
-			for y := 0; y < terrain.ChunkSizeSubdivisions; y++ {
-				gl.Color3d(tileColor(chunk.Vertices.Get((x/terrain.Subdivisions)*terrain.Subdivisions, (y/terrain.Subdivisions)*terrain.Subdivisions)))
-
+		for x := 0; x < config.ChunkArraySize() - 1; x++ {
+			for y := 0; y < config.ChunkArraySize() - 1; y++ {
 				gl.Normal3d(chunk.Normals.Get(x, y))
 				gl.Vertex3d(chunk.Vertices.Get(x, y))
 				x++
