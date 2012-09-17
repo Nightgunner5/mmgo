@@ -12,7 +12,7 @@ func TerrainSubdivisions() int {
 }
 
 func TerrainDetail() int {
-	return terrainQuality>>4 + 3
+	return terrainQuality>>2 + 1
 }
 
 // Do not use this directly. Use the method with the same name in terrain.

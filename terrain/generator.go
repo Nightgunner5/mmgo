@@ -10,7 +10,7 @@ const (
 	scaleVertical   = 1.5
 
 	traceNoiseIterations = 3
-	noiseAmplitude       = 0.15
+	noiseAmplitude       = 0.3
 	noiseFrequency       = 3
 )
 
